@@ -1,6 +1,7 @@
 #![allow(unused)]
 use clap::{Parser, Subcommand};
 use hex;
+use magic_switcheroo::base::BaseChoice;
 use magic_switcheroo::errors;
 use magic_switcheroo::fs::read_file;
 #[derive(Parser)]
@@ -57,7 +58,13 @@ fn main() -> Result<(), errors::Error> {
             oct,
             dec,
         }) => {
-            println!("chr {}", parts);
+            let bc = BaseChoice {
+                bin: *bin,
+                dec: *dec,
+                hex: *hex,
+                oct: *oct,
+            };
+            println!("chr {}", bc);
         }
         Some(Commands::Ord {
             parts,
@@ -66,10 +73,15 @@ fn main() -> Result<(), errors::Error> {
             oct,
             dec,
         }) => {
-            println!("chr {}", parts);
+            let bc = BaseChoice {
+                bin: *bin,
+                dec: *dec,
+                hex: *hex,
+                oct: *oct,
+            };
+            println!("ord {}", bc);
         }
         None => {}
     }
-
     Ok(())
 }
