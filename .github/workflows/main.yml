@@ -24,5 +24,4 @@ jobs:
       - name: run
         uses: actions-rs/cargo@v1
         with:
-          command: run
-          args: lsusb
+          command: test
