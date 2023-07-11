@@ -8,6 +8,7 @@ pub struct BaseChoice {
     pub hex: bool,
     pub oct: bool,
 }
+#[derive(Debug, PartialEq)]
 pub enum Base {
     Bin,
     Dec,
@@ -256,7 +257,7 @@ pub fn parse_u32_from_string(data: String) -> Result<u32, Error> {
 
 #[cfg(test)]
 mod parsing_tests {
-    use crate::base::{parse_base_from_prefix, parse_u32_from_string};
+    use crate::base::{parse_base_from_prefix, parse_u32_from_string, Base};
     use crate::errors::Error;
 
     #[test]

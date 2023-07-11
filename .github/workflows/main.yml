@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build_release:
+    name: Build Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build release
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+
+  run_examples:
+    name: End-to-End Test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: run
+        uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: lsusb
