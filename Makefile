@@ -3,20 +3,15 @@
 test build check:
 	cargo $@
 
-
 release:
 	cargo build --$@
 	install target/$@/ms ~/usr/bin
 
-debug: 
+debug:
 	cargo build
 	install target/$@/ms ~/usr/bin
 
-
-e2e: e2e-encode e2e-ord e2e-chr
-
-e2e-encode: debug
-	ms encode sc.png --magic SSENTERPRISE
+e2e: e2e-ord e2e-chr
 
 e2e-ord: debug
 	ms ord --hex T

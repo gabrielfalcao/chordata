@@ -13,11 +13,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Encode {
-        filename: String,
-        #[arg(short, long)]
-        magic: String,
-    },
     Chr {
         #[arg(short, long)]
         hex: bool,

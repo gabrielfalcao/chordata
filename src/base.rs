@@ -9,6 +9,9 @@ pub struct BaseChoice {
     pub oct: bool,
 }
 impl BaseChoice {
+    pub fn from_prefixed_string(data: String) -> BaseChoice {
+        parse_base_from_prefix(data).to_choice()
+    }
     pub fn to_vec(&self) -> Vec<bool> {
         Vec::from([self.bin, self.dec, self.hex, self.oct])
     }
