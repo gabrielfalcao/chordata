@@ -1,9 +1,9 @@
 #![allow(unused)]
 use clap::{Parser, Subcommand};
 use hex;
-use magic_switcheroo::base::BaseChoice;
-use magic_switcheroo::errors;
-use magic_switcheroo::fs::read_file;
+use chordata::base::BaseChoice;
+use chordata::errors;
+use chordata::fs::read_file;
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, disable_help_flag = true)]
 struct Cli {

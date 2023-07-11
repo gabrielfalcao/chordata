@@ -2,6 +2,8 @@
 pub enum Error {
     IOError(std::io::Error),
     ConfusingBaseError(ConfusingBaseError),
+    DataConversionError(String),
+    RegexCaptureError(String),
 }
 
 impl std::fmt::Display for Error {
@@ -9,6 +11,8 @@ impl std::fmt::Display for Error {
         match self {
             Error::IOError(e) => write!(f, "IOError: {:#?}", e),
             Error::ConfusingBaseError(e) => write!(f, "ConfusingBaseError: {:#?}", e),
+            Error::DataConversionError(e) => write!(f, "DataConversionError: {}", e),
+            Error::RegexCaptureError(e) => write!(f, "RegexCaptureError: {}", e),
         }
     }
 }

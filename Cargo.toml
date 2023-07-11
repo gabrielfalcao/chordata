@@ -1,13 +1,14 @@
 [package]
-name = "magic-switcheroo"
+name = "chordata"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html 
+license-file = "COPYING"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 clap = { version = "4.3.10", features = ["derive", "unicode", "env"] }
 hex = "0.4.3"
+regex = "1.9.0"
 
 [dev-dependencies]
 k9 = "0.11.6"
@@ -16,4 +17,3 @@ speculate = "0.1.2"
 
 [[bin]]
 name = "ms"
-
