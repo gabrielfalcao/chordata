@@ -8,6 +8,43 @@ pub struct BaseChoice {
     pub hex: bool,
     pub oct: bool,
 }
+impl BaseChoice {
+    pub fn to_vec(&self) -> Vec<bool> {
+        Vec::from([self.bin, self.dec, self.hex, self.oct])
+    }
+
+    pub fn to_radix(&self) -> Result<u32, Error> {
+        self.validate()?;
+        Ok(if self.bin {
+            2
+        } else if self.dec {
+            10
+        } else if self.hex {
+            16
+        } else if self.oct {
+            8
+        } else {
+            DEFAULT_BASE
+        })
+    }
+    pub fn validate(&self) -> Result<(), ConfusingBaseError> {
+        return if self.to_vec().iter().filter(|&x| *x).count() > 1 {
+            Err(ConfusingBaseError::new(format!(
+                "only one choice is allowed, but got multiple: {}",
+                self
+            )))
+        } else {
+            Ok(())
+        };
+    }
+    pub fn chr(&self, val: u32) -> Result<char, Error> {
+        match char::from_u32(val) {
+            Some(cs) => Ok(cs),
+            None => Err(Error::DataConversionError(format!("could not convert {} to char", val)))
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub enum Base {
     Bin,
@@ -46,18 +83,17 @@ impl Base {
         }
     }
 }
-// #[cfg(test)]
-// mod base_tests {
-//     use crate::base::Base;
-//     use crate::errors::Error;
-//     use k9::assert_matches_regex;
+#[cfg(test)]
+mod base_tests {
+    use crate::base::Base;
+    use crate::errors::Error;
 
-//     #[test]
-//     fn test_chr() -> Result<(), Error> {
-//         assert_eq!(Base::Dec.to_choice().chr(71)?, 'G');
-//         Ok(())
-//     }
-// }
+    #[test]
+    fn test_chr() -> Result<(), Error> {
+        assert_eq!(Base::Dec.to_choice().chr(71)?, 'G');
+        Ok(())
+    }
+}
 
 impl std::fmt::Display for BaseChoice {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -79,36 +115,6 @@ impl std::fmt::Display for BaseChoice {
 }
 pub const DEFAULT_BASE: u32 = 10;
 
-impl BaseChoice {
-    pub fn to_vec(&self) -> Vec<bool> {
-        Vec::from([self.bin, self.dec, self.hex, self.oct])
-    }
-
-    pub fn to_radix(&self) -> Result<u32, Error> {
-        self.validate()?;
-        Ok(if self.bin {
-            2
-        } else if self.dec {
-            10
-        } else if self.hex {
-            16
-        } else if self.oct {
-            8
-        } else {
-            DEFAULT_BASE
-        })
-    }
-    pub fn validate(&self) -> Result<(), ConfusingBaseError> {
-        return if self.to_vec().iter().filter(|&x| *x).count() > 1 {
-            Err(ConfusingBaseError::new(format!(
-                "only one choice is allowed, but got multiple: {}",
-                self
-            )))
-        } else {
-            Ok(())
-        };
-    }
-}
 
 #[cfg(test)]
 mod base_choice_tests {
@@ -265,12 +271,12 @@ mod parsing_tests {
         assert_eq!(parse_base_from_prefix("0b100".to_string()), Base::Bin);
         assert_eq!(parse_base_from_prefix("0o71".to_string()), Base::Oct);
         assert_eq!(parse_base_from_prefix("0x3f".to_string()), Base::Hex);
-        assert_eq!(parse_base_from_prefix("0x".to_string()), Base::Dec);
+        assert_eq!(parse_base_from_prefix("0".to_string()), Base::Dec);
     }
     #[test]
     fn test_parse_u32_from_string_hex() -> Result<(), Error> {
         assert_eq!(parse_u32_from_string("0b100".to_string())?, 4);
-        assert_eq!(parse_u32_from_string("0o71".to_string())?, 10);
+        assert_eq!(parse_u32_from_string("0o71".to_string())?, 57);
         assert_eq!(parse_u32_from_string("0x3f".to_string())?, 63);
         assert_eq!(parse_u32_from_string("55".to_string())?, 55);
         Ok(())
