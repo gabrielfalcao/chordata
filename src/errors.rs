@@ -46,3 +46,9 @@ impl ConfusingBaseError {
         ConfusingBaseError { reason }
     }
 }
+
+
+pub enum Result<T>{
+    Ok(T),
+    Err(Error)
+}

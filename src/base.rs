@@ -55,6 +55,11 @@ pub enum Base {
     Hex,
     Oct,
 }
+impl std::fmt::Display for Base {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.to_choice())
+    }
+}
 
 impl Base {
     pub fn to_choice(&self) -> BaseChoice {
@@ -244,7 +249,7 @@ pub fn parse_base_from_prefix(data: String) -> Base {
     }
 }
 
-pub fn parse_u32_from_string(data: String) -> Result<u32, Error> {
+pub fn parse_u32_from_string(data: String) -> Result<(Base, u32), Error> {
     let br = Regex::new(r"^(0[box])?([0-9a-zA-Z]+)$").unwrap();
     let base = parse_base_from_prefix(data.to_lowercase());
     let bd = data.to_lowercase();
@@ -259,9 +264,9 @@ pub fn parse_u32_from_string(data: String) -> Result<u32, Error> {
     };
     let prenum = caps.get(2).map_or("0", |m| m.as_str());
     let radix = base.to_choice().to_radix()?;
-    eprintln!("prenum:{:?} radix: {:?}", prenum, radix);
+    // eprintln!("prenum:{:?} radix: {:?}", prenum, radix);
     let num = u32::from_str_radix(prenum, radix).unwrap();
-    Ok(num)
+    Ok((base, num))
 }
 
 #[cfg(test)]
@@ -272,16 +277,16 @@ mod parsing_tests {
     #[test]
     fn test_parse_base_from_prefix() {
         assert_eq!(parse_base_from_prefix("0b100".to_string()), Base::Bin);
-        assert_eq!(parse_base_from_prefix("0o71".to_string()), Base::Oct);
-        assert_eq!(parse_base_from_prefix("0x3f".to_string()), Base::Hex);
-        assert_eq!(parse_base_from_prefix("0".to_string()), Base::Dec);
+        assert_eq!(parse_base_from_prefix("0o71".to_string()),  Base::Oct);
+        assert_eq!(parse_base_from_prefix("0x3f".to_string()),  Base::Hex);
+        assert_eq!(parse_base_from_prefix("0".to_string()),     Base::Dec);
     }
     #[test]
     fn test_parse_u32_from_string_hex() -> Result<(), Error> {
-        assert_eq!(parse_u32_from_string("0b100".to_string())?, 4);
-        assert_eq!(parse_u32_from_string("0o71".to_string())?, 57);
-        assert_eq!(parse_u32_from_string("0x3f".to_string())?, 63);
-        assert_eq!(parse_u32_from_string("55".to_string())?, 55);
+        assert_eq!(parse_u32_from_string("0x3f".to_string())?,  (Base::Hex, 63));
+        assert_eq!(parse_u32_from_string("0b100".to_string())?, (Base::Bin, 4));
+        assert_eq!(parse_u32_from_string("0o71".to_string())?,  (Base::Oct, 57));
+        assert_eq!(parse_u32_from_string("55".to_string())?,    (Base::Dec, 55));
         Ok(())
     }
 }
