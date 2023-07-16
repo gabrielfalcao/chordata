@@ -2,7 +2,8 @@
 name = "chordata"
 version = "0.1.0"
 edition = "2021"
-license-file = "COPYING"
+license = "GPL-3.0-or-later"
+authors = ["Gabriel Falcão <gabriel@nacaolivre.org>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -17,3 +18,5 @@ speculate = "0.1.2"
 
 [[bin]]
 name = "ms"
+path = "src/cli.rs"
+bench = false
