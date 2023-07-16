@@ -17,7 +17,7 @@ jobs:
           args: --release
 
   run_examples:
-    name: End-to-End Test
+    name: Cargo (Unit) Test MacOS
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,3 +25,22 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
+
+  unit_test:
+    name: Cargo (Unit) Test Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build release
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  e2e_test:
+    name: End-to-End Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: make e2e
+        run: |
+          make e2e
